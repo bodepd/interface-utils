@@ -5,6 +5,7 @@ module Puppet::Tools
     #  given a modulepath, returns all of the manifests and test manifests
     #  and manifests without corresponding tests
     def get_code(modulepath, opts={})
+      raise 'cannot specify include and exclude modules' if opts[:include_modules] and opts[:exclude_modules]
       get_tests = opts[:get_tests]
       code = {:tests => [], :untested => [], :manifests => []}
       tests, manifests = [],[]
@@ -13,12 +14,25 @@ module Puppet::Tools
         Puppet.info("Searching modulepath: #{path}")
         # TODO - this does not find symlinks
         Find.find(path) do |file|
-          if get_tests and file =~ /#{path}\/(\S+)\/tests\/(\S+.pp)$/
-            code[:tests].push file
-            tests.push "#{$1}-#{$2.gsub('/', '-')}"
-          elsif file =~ /#{path}\/(\S+)\/manifests\/(\S+.pp)$/
-            code[:manifests].push file
-            manifests.push "#{$1}-#{$2.gsub('/', '-')}"
+          if file =~ /#{path}\/([^\/ ]+)\/(tests|manifests)\/(\S+.pp)$/
+
+            module_name = $1
+            type = $2
+            manifest_name = $3
+            #puts "|#{module_name}|#{type}|#{manifest_name}|"
+            # I either do this, or I only do this if I have a match
+            # TOO TIRED TO THINK!!! HELP!!!!
+            if (opts[:include_modules] and opts[:include_modules].include?(module_name)) or
+               (opts[:exclude_modules] and not(opts[:exclude_modules].include?(module_name))) or
+               not(opts[:exclude_modules] or opts[:include_modules])
+              if get_tests and type == 'tests'
+                code[:tests].push file
+                tests.push "#{module_name}-#{manifest_name.gsub('/', '-')}"
+              elsif file =~ /#{path}\/(\S+)\/manifests\/(\S+.pp)$/
+                code[:manifests].push file
+                manifests.push "#{module_name}-#{manifest_name.gsub('/', '-')}"
+              end
+            end
           end
         end
       end

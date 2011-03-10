@@ -10,6 +10,12 @@ class Puppet::Application::Test < Puppet::Application::InterfaceBase
     options[:outputdir]=args
   end
   option('--run_noop')
+  option('--include_modules MODULES') do |args|
+    options[:include_modules]=args.split(',')
+  end
+  option('--exclude_modules MODULES') do |args|
+    options[:exclude_modules]=args.split(',')
+  end
   # reder is also setting the return code
   def render(results) 
     case verb
