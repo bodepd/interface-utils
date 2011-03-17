@@ -30,7 +30,7 @@ describe 'Puppet::Application::Test' do
       it 'should identify manifests missing tests' do
         FileUtils.touch(File.join(@modpath, 'fooper', 'manifests', 'dev', 'b.pp'))
         @tester.options={:modulepath=>@modpath}
-        @tester.check_tests(@modpath).should == ['fooper-dev-b.pp']
+        @tester.check_tests(@modpath).should == ['fooper/dev/b.pp']
       end
       it 'should work with multiple modulepaths' do
         @tmpdir = tmpdir('foo')
@@ -40,7 +40,7 @@ describe 'Puppet::Application::Test' do
           FileUtils.mkdir_p(File.join(@modulepaths[i], @modules[i], "manifests"))
           FileUtils.touch(File.join(@modulepaths[i], @modules[i], "manifests", 'blah.pp'))
         end
-        get_code(@modulepaths.join(':'), :get_tests=>true)[:untested].should =~ ['bar-blah.pp', 'foo-blah.pp']
+        get_code(@modulepaths.join(':'), :get_tests=>true)[:untested].should =~ ['bar/blah.pp', 'foo/blah.pp']
       end
     end
   end

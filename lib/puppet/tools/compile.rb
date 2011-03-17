@@ -6,11 +6,11 @@ module Puppet::Tools
     def compile_module_tests(testfiles, run_noop=false, noop_exclude=[])
       # TODO - I should be able to pick any fact cache
       results = {}
-      testfiles.each do |test|
-        Puppet[:manifest]=test
+      testfiles.each do |test_file|
+        Puppet[:manifest] = test_file
         # convert manifests into a readable minimal name that is unique
-        node_name = test.gsub('/', '-')
-        results[node_name] = {}
+        node_name = test_file.gsub('/', '-')
+        results[test_file] = {}
         facts = Puppet::Interface.interface(:facts).find(node_name)
         node = Puppet::Node.new(node_name)#.merge(facts.values)
         node.merge(facts.values)
@@ -18,10 +18,10 @@ module Puppet::Tools
         #require 'ruby-debug';debugger
         noop_status = nil
         catalog = catalog || :failed_to_compile
-        results[node_name]['catalog'] = catalog
+        results[test_file]['catalog'] = catalog
         if run_noop and catalog != :failed_to_compile
           # TODO - I should be saving the status that is returned
-          results[node_name]['results'] = noop_run(catalog)
+          results[test_file]['results'] = noop_run(catalog)
         else
           # return failed if catalog is nil
         end

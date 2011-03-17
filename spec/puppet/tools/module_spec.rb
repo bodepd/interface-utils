@@ -33,7 +33,7 @@ describe 'Puppet::Tools::Module' do
   it 'should find untesed' do
     FileUtils.touch(File.join(@modpath, 'fooper', 'manifests', 'dev', 'foo.pp'))
     code = get_code(@modpath, :get_tests => true)
-    code[:untested].should == ['fooper-dev-foo.pp']
+    code[:untested].should == ['fooper/dev/foo.pp']
     code[:manifests].should == ["#{@modpath}/fooper/manifests/dev/foo.pp"]
     code[:tests].should == []
   end
@@ -43,7 +43,7 @@ describe 'Puppet::Tools::Module' do
 ))
     end
     code = get_code(@modulepaths.join(':'), :get_tests => true)
-    code[:untested].should == ['bar-blah.pp', 'foo-blah.pp']
+    code[:untested].should == ['bar/blah.pp', 'foo/blah.pp']
     code[:tests].should == [
       "#{@modulepaths[0]}/bar/tests/init.pp",
       "#{@modulepaths[1]}/foo/tests/init.pp"]
@@ -79,7 +79,7 @@ describe 'Puppet::Tools::Module' do
     FileUtils.touch(File.join(@deepdir, 'fooper', "manifests/dev/bar.pp"))
     get_code(@deepdir)[:manifests].should == [File.join(@deepdir, 'fooper', "manifests/dev/bar.pp")]
     get_code(@deepdir)[:tests].should == []
-    get_code(@deepdir, :get_tests=>true)[:untested].should == ['fooper-dev-bar.pp']
+    get_code(@deepdir, :get_tests=>true)[:untested].should == ['fooper/dev/bar.pp']
 
   end
   describe 'when setting module path' do

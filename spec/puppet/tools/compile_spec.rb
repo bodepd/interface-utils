@@ -37,13 +37,13 @@ describe 'Puppet::Tools::Compile' do
     end
     describe 'when compiling tests' do
       it 'should compile manifest file list and return catalogs when successful' do
-        compile_module_tests(@files, false)[@files[0].gsub('/', '-')]['catalog'].resource('Notify', 'foo').to_s.should == 'Notify[foo]'#.should_not be_nil
-        compile_module_tests(@files, false)[@files[1].gsub('/', '-')]['catalog'].resource('Notify', 'bar').to_s.should == 'Notify[bar]'#.should_not be_nil
+        compile_module_tests(@files, false)[@files[0]]['catalog'].resource('Notify', 'foo').to_s.should == 'Notify[foo]'#.should_not be_nil
+        compile_module_tests(@files, false)[@files[1]]['catalog'].resource('Notify', 'bar').to_s.should == 'Notify[bar]'#.should_not be_nil
       end 
       it 'should stores :failed_to_compile for a failed catalog' do
         File.open(@files.last, 'w') do |fh| fh.write('notifyfoo}') end
-        compile_module_tests(@files, false)[@files[0].gsub('/', '-')]['catalog'].resource('Notify', 'foo').to_s.should == 'Notify[foo]'#.should_not be_nil
-        compile_module_tests(@files, false)[@files[1].gsub('/', '-')]['catalog'].should == :failed_to_compile#.should_not be_nil
+        compile_module_tests(@files, false)[@files[0]]['catalog'].resource('Notify', 'foo').to_s.should == 'Notify[foo]'#.should_not be_nil
+        compile_module_tests(@files, false)[@files[1]]['catalog'].should == :failed_to_compile#.should_not be_nil
       end
     end
   end

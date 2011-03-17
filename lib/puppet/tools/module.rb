@@ -27,10 +27,10 @@ module Puppet::Tools
                not(opts[:exclude_modules] or opts[:include_modules])
               if get_tests and type == 'tests'
                 code[:tests].push file
-                tests.push "#{module_name}-#{manifest_name.gsub('/', '-')}"
+                tests.push "#{module_name}/#{manifest_name}"
               elsif file =~ /#{path}\/(\S+)\/manifests\/(\S+.pp)$/
                 code[:manifests].push file
-                manifests.push "#{module_name}-#{manifest_name.gsub('/', '-')}"
+                manifests.push "#{module_name}/#{manifest_name}"
               end
             end
           end
