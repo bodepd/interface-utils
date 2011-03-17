@@ -20,10 +20,14 @@ class Puppet::Application::Test < Puppet::Application::InterfaceBase
   def render(results) 
     case verb
       when 'check_tests' then 
-        starting_str = "The following manifests are missing tests\n"
-        results.inject(starting_str) do |str, element| 
-          exit_code = 1
-          str << "#{element}\n" 
+        if results.size > 0
+          starting_str = "The following tests need to be added\n"
+          results.inject(starting_str) do |str, element| 
+            exit_code = 1
+            str << "#{element.split('/').insert(1, 'tests').join('/')}\n"
+          end
+        else
+          'No missing tests'
         end
       when 'compile_tests' then
         transformed_results = {
